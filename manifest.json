@@ -1,0 +1,24 @@
+{
+    "name": "Kid IP TV",
+    "short_name": "KidIPTV",
+    "description": "Safe and fun videos for kids. Cartoons, songs, and shows all in one place.",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#020617",
+    "theme_color": "#1e67ff",
+    "orientation": "portrait-primary",
+    "icons": [
+        {
+            "src": "icons/icon-192.png",
+            "sizes": "192x192",
+            "type": "image/png",
+            "purpose": "any maskable"
+        },
+        {
+            "src": "icons/icon-512.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "any maskable"
+        }
+    ]
+}

@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kid IP TV - Safe Videos for Kids</title>
+    
+    <!-- Meta Info for PWA & SEO -->
+    <meta name="description" content="A safe and fun collection of cartoons, songs, and shows for kids.">
+    <meta name="theme-color" content="#020617">
+    
+    <!-- PWA Manifest (Must be a separate file) -->
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="icons/icon-192.png">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+
+    <!-- =========== INTERNAL CSS (styles.css) =========== -->
+    <style>
+        :root {
+            --accent-color: #1e67ff;
+            --text-primary: #f0f0f0;
+            --text-secondary: #a0a0a0;
+            --bg-card: rgba(30, 103, 255, 0.08);
+            --border-card: rgba(30, 103, 255, 0.2);
+            --shadow-color: rgba(0, 0, 0, 0.3);
+            --bg-gradient: linear-gradient(145deg, #0b1b3b, #020617);
+            --border-radius: 12px;
+        }
+
+        body[data-theme="dark"] {
+            --bg-gradient: linear-gradient(145deg, #111, #000);
+            --bg-card: rgba(255, 255, 255, 0.05);
+            --border-card: rgba(255, 255, 255, 0.1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: 'Poppins', sans-serif;
+            color: var(--text-primary);
+            background: var(--bg-gradient);
+            background-attachment: fixed;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            transition: background 0.3s ease;
+        }
+        main { flex-grow: 1; }
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.2rem 5%;
+            background: rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            text-decoration: none;
+            text-shadow: 0 0 5px var(--accent-color);
+        }
+        #theme-toggle {
+            background: transparent;
+            border: 1px solid var(--accent-color);
+            color: var(--accent-color);
+            font-size: 1.2rem;
+            padding: 0.4rem 0.6rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        #theme-toggle:hover {
+            background-color: var(--accent-color);
+            color: #fff;
+        }
+        .hero { text-align: center; padding: 5rem 1rem; }
+        .hero-title {
+            font-size: 2.8rem;
+            font-weight: 700;
+            line-height: 1.2;
+            background: -webkit-linear-gradient(45deg, #fff, var(--accent-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.5rem;
+        }
+        .hero-subtitle {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            font-weight: 400;
+        }
+        .video-gallery { padding: 0 5% 4rem; }
+        .video-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 2rem;
+        }
+        .video-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-card);
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: 0 8px 32px 0 var(--shadow-color);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .video-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 40px 0 var(--shadow-color), 0 0 15px var(--accent-color);
+        }
+        .video-card iframe { width: 100%; aspect-ratio: 16 / 9; border: none; display: block; }
+        .video-title { padding: 1rem; font-weight: 600; font-size: 1rem; background: rgba(0, 0, 0, 0.2); text-align: center; }
+        footer { text-align: center; padding: 2rem 1rem; margin-top: auto; color: var(--text-secondary); font-size: 0.9rem; }
+
+        @media (max-width: 768px) {
+            .hero-title { font-size: 2.2rem; }
+            .hero-subtitle { font-size: 1rem; }
+            .video-grid { grid-template-columns: 1fr; }
+            header, .video-gallery { padding-left: 4%; padding-right: 4%; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <a href="/" class="logo">Kid IP TV</a>
+        <nav>
+            <button id="theme-toggle" title="Toggle Theme">🌓</button>
+        </nav>
+    </header>
+
+    <main>
+        <section class="hero">
+            <h2 class="hero-title">শুধু বাচ্চাদের জন্য নিরাপদ ভিডিও</h2>
+            <p class="hero-subtitle">কার্টুন, গান, শো – সব এক জায়গায়!</p>
+        </section>
+
+        <section class="video-gallery">
+            <div id="video-grid" class="video-grid"><!-- Video cards injected here --></div>
+        </section>
+    </main>
+
+    <footer>
+        <p id="footer-text">&copy; 2025 Kid IP TV</p>
+    </footer>
+
+    <!-- =========== INTERNAL JAVASCRIPT (app.js) =========== -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+
+            const videos = [
+                { title: "Meena Cartoon: Count Your Chickens", id: "y4yr6k8qg_A" },
+                { title: "Tom & Jerry | A Bit of Fresh Air", id: "5qap5aO4i9A" },
+                { title: "Gopal Bhar | The Magical Tree", id: "S_Rz2mCoNbA" },
+                { title: "Wheels on the Bus | Cocomelon", id: "_spuxX_Fv3s" },
+                { title: "Hattimatim Tim | Bengali Rhymes", id: "kLrsWL450pY" },
+                { title: "Learn Colors with Funny Fruits", id: "LXb3EKWsInQ" },
+                { title: "Peppa Pig | The Official Channel", id: "jY_QY2s_x-E" },
+                { title: "Simple Science Experiments for Kids", id: "7s8TGi39B-o" }
+            ];
+
+            const videoGrid = document.getElementById('video-grid');
+            const themeToggleButton = document.getElementById('theme-toggle');
+            const footerText = document.getElementById('footer-text');
+
+            function renderVideos() {
+                if (!videoGrid) return;
+                videoGrid.innerHTML = '';
+                videos.forEach(video => {
+                    const videoCard = `
+                        <div class="video-card">
+                            <iframe 
+                                src="https://www.youtube.com/embed/${video.id}?rel=0&showinfo=0&modestbranding=1" 
+                                title="${video.title}" 
+                                frameborder="0" 
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                                allowfullscreen loading="lazy">
+                            </iframe>
+                            <div class="video-title">${video.title}</div>
+                        </div>
+                    `;
+                    videoGrid.insertAdjacentHTML('beforeend', videoCard);
+                });
+            }
+
+            function toggleTheme() {
+                const currentTheme = document.body.getAttribute('data-theme');
+                const newTheme = currentTheme === 'dark' ? 'blue' : 'dark';
+                document.body.setAttribute('data-theme', newTheme);
+                localStorage.setItem('theme', newTheme);
+            }
+            
+            function loadTheme() {
+                const savedTheme = localStorage.getItem('theme') || 'blue';
+                document.body.setAttribute('data-theme', savedTheme);
+            }
+
+            function updateFooterYear() {
+                if (footerText) {
+                    footerText.textContent = `© ${new Date().getFullYear()} Kid IP TV`;
+                }
+            }
+            
+            loadTheme();
+            renderVideos();
+            updateFooterYear();
+
+            if (themeToggleButton) {
+                themeToggleButton.addEventListener('click', toggleTheme);
+            }
+
+            if ('serviceWorker' in navigator) {
+                window.addEventListener('load', () => {
+                    navigator.serviceWorker.register('/sw.js')
+                        .then(reg => console.log('ServiceWorker registration successful.', reg))
+                        .catch(err => console.log('ServiceWorker registration failed: ', err));
+                });
+            }
+        });
+    </script>
+
+</body>
+</html>
